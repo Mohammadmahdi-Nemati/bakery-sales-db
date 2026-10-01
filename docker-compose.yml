@@ -1,0 +1,13 @@
+services:
+  db:
+    image: postgres:16
+    container_name: bakery-db
+    environment:
+      POSTGRES_USER: bakery
+      POSTGRES_PASSWORD: bakery
+      POSTGRES_DB: bakery
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql/init:/docker-entrypoint-initdb.d:ro   # Schema, Daten, Indizes, Views (in dieser Reihenfolge)
+      - ./data:/data:ro                             # CSV-Dateien aus generator/generate_data.py
