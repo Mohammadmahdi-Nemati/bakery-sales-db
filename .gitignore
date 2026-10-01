@@ -1,0 +1,6 @@
+# Generierte Testdaten (werden mit generator/generate_data.py erzeugt)
+data/*.csv
+
+__pycache__/
+.venv/
+.DS_Store
