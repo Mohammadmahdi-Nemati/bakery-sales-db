@@ -212,9 +212,10 @@ bakery-sales-db/
 
 ## Nächste Schritte
 
-- **Version 2:** Absatzprognose mit Python (pandas, scikit-learn), die Ausverkäufe berücksichtigt.
-  Der gemessene Absatz ist an ausverkauften Tagen nach oben begrenzt, die echte Nachfrage war höher.
-- Feiertage und Wetter in die Produktionsplanung einbeziehen.
+- ✅ **Version 2 ist fertig:** [bakery-demand-forecast](https://github.com/Mohammadmahdi-Nemati/bakery-demand-forecast),
+  eine Absatzprognose mit Python (pandas, scikit-learn), die Ausverkäufe und Feiertage berücksichtigt.
+  Ergebnis: 6,4 % weniger Kosten durch Fehlplanung, an Feiertagen sinkt die Abfallquote von 24,1 % auf 10,1 %.
+- Wetter in die Produktionsplanung einbeziehen.
 - Dashboard für die Filialleitung.
 
 ---
