@@ -155,6 +155,7 @@ def simulate():
     product_by_id = {p[0]: p for p in PRODUCTS}
 
     receipts, items, production, waste = [], [], [], []
+    true_demand = []   # Ground Truth: echte Nachfrage inkl. verlorener Verkäufe (nur für Evaluation)
     # unbeschränkte Nachfrage (inkl. verlorener Verkäufe) je (Filiale, Produkt, Wochentag)
     demand_history = defaultdict(list)
     receipt_id = 0
@@ -227,6 +228,7 @@ def simulate():
                 if not record:
                     continue
                 production.append((branch_id, pid, day.isoformat(), baked[pid]))
+                true_demand.append((branch_id, pid, day.isoformat(), demand_today[pid]))
                 left = stock[pid]
                 damaged = min(left, rng.choices([0, 1, 2], [85, 12, 3])[0])
                 if damaged:
@@ -235,7 +237,7 @@ def simulate():
                     waste.append((branch_id, pid, day.isoformat(), "abgelaufen", left - damaged))
         day += timedelta(days=1)
 
-    return receipts, items, production, waste
+    return receipts, items, production, waste, true_demand
 
 
 def write(name, header, rows):
@@ -248,7 +250,7 @@ def write(name, header, rows):
 
 def main():
     OUT.mkdir(exist_ok=True)
-    receipts, items, production, waste = simulate()
+    receipts, items, production, waste, true_demand = simulate()
     print(f"Schreibe CSV-Dateien nach {OUT}")
     write("category", ["category_id", "name"], CATEGORIES.items())
     write("product", ["product_id", "name", "category_id", "price", "unit_cost", "shelf_life_hours"],
@@ -262,6 +264,9 @@ def main():
     write("receipt_item", ["receipt_id", "line_no", "product_id", "quantity", "unit_price"], items)
     write("daily_production", ["branch_id", "product_id", "prod_date", "quantity_baked"], production)
     write("waste", ["branch_id", "product_id", "waste_date", "reason", "quantity_wasted"], waste)
+    # Nicht Teil der Datenbank: In der Realität kennt niemand die Nachfrage an ausverkauften Tagen.
+    # Die Datei dient nur dazu, Prognosemodelle fair zu bewerten (Projekt bakery-demand-forecast).
+    write("true_demand", ["branch_id", "product_id", "demand_date", "demand"], true_demand)
 
 
 if __name__ == "__main__":
